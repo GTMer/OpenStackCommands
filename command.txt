@@ -1,0 +1,31 @@
+实验命令：https://github.com/huihongxiao/exercise/tree/master/neutron_foundation
+实验环境网络初始化：
+source devstack/openrc admin admin
+sudo ip addr add dev br-ex 172.24.4.1/24
+sudo ip link set br-ex up
+sudo iptables -t nat -A POSTROUTING -s 172.24.4.0/24 -o ens3 -j MASQUERADE
+
+sudo echo 'alias ls="ls --color=auto" ' >> /etc/bash.bashrc
+
+sudo useradd -s /bin/bash -d /opt/stack -m stack
+
+echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+sudo su - stack
+
+重启服务等命令：
+https://docs.openstack.org/devstack/latest/systemd.html
+sudo systemctl restart devstack@q-*
+
+查看ovs设备：
+sudo ovs-vsctl show
+查看ovs设备流表：
+sudo ovs-ofctl dump-flows br-int(ovs设备名）
+查看ovs设备端口：
+sudo ovs-ofctl show br-int(ovs设备名）
+
+查看iptables规则：
+sudo iptables -vnL
+
+在 /etc/neutron/plugins/ml2/ml2_conf.ini 设置 二层网络相关参数
+
+新建虚拟机发生错误，检查网络是不是有问题，各个端口是否正常，再看看ml2.conf里是不是有东西设置错了。
